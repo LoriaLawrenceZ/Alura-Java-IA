@@ -48,9 +48,9 @@ public class PrincipalComBusca {
                 JOptionPane.showMessageDialog(null, "Erro ao converter o ano de lançamento ou a duração do filme");
                 System.out.println("Erro:\n" + nfe.getMessage());
 
+            } finally {
+                System.out.println("Fim do programa");
             }
-
-            System.out.println("Fim do programa");
         }
     }
 }
