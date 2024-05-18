@@ -1,5 +1,11 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.modelos.Titulo;
+import br.com.alura.screenmatch.modelos.TituloOmdb;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URI;
@@ -14,14 +20,21 @@ public class PrincipalComBusca {
 
         try (HttpClient client = HttpClient.newHttpClient()) {
 
-            StringBuilder endereco = new StringBuilder("https://www.omdbapi.com/?t=").append(filme).append("&apikey=5d1ee8ba");
-
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco.toString()))
+                .uri(URI.create("https://www.omdbapi.com/?t=" + filme + "&apikey=5d1ee8ba"))
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
+            String jsonBody = response.body();
+            System.out.println(jsonBody);
+
+            Gson gson = new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                    .create();
+            TituloOmdb meuTituloOmdb = gson.fromJson(jsonBody, TituloOmdb.class);
+            System.out.println(meuTituloOmdb);
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println(meuTitulo);
         }
     }
 }
