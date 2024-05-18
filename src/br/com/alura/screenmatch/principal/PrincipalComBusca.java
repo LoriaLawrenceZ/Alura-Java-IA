@@ -33,8 +33,24 @@ public class PrincipalComBusca {
                     .create();
             TituloOmdb meuTituloOmdb = gson.fromJson(jsonBody, TituloOmdb.class);
             System.out.println(meuTituloOmdb);
-            Titulo meuTitulo = new Titulo(meuTituloOmdb);
-            System.out.println(meuTitulo);
+            try {
+
+                Titulo meuTitulo = new Titulo(meuTituloOmdb);
+                JOptionPane.showMessageDialog(null, meuTitulo);
+
+            } catch (NullPointerException npe) {
+
+                JOptionPane.showMessageDialog(null, "Filme não encontrado");
+                System.out.println("Erro:\n" + npe.getMessage());
+
+            } catch (NumberFormatException nfe) {
+
+                JOptionPane.showMessageDialog(null, "Erro ao converter o ano de lançamento ou a duração do filme");
+                System.out.println("Erro:\n" + nfe.getMessage());
+
+            }
+
+            System.out.println("Fim do programa");
         }
     }
 }
