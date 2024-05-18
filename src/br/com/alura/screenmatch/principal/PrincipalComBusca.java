@@ -20,10 +20,8 @@ public class PrincipalComBusca {
 
         try (HttpClient client = HttpClient.newHttpClient()) {
 
-            StringBuilder endereco = new StringBuilder("https://www.omdbapi.com/?t=").append(filme).append("&apikey=5d1ee8ba");
-
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco.toString()))
+                .uri(URI.create("https://www.omdbapi.com/?t=" + filme + "&apikey=5d1ee8ba"))
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
