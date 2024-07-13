@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.excecao.ErroDeConversaoDeAnoException;
 import br.com.alura.screenmatch.modelos.Titulo;
 import br.com.alura.screenmatch.modelos.TituloOmdb;
 import com.google.gson.FieldNamingPolicy;
@@ -18,10 +19,13 @@ public class PrincipalComBusca {
     public static void main(String[] args) throws IOException, InterruptedException {
         String filme = JOptionPane.showInputDialog("Qual o nome do filme?");
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        String endereco = "https://www.omdbapi.com/?t=" + filme.replace(" ", "+") + "&apikey=5d1ee8ba";
 
+        try{
+
+            HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://www.omdbapi.com/?t=" + filme + "&apikey=5d1ee8ba"))
+                .uri(URI.create(endereco))
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -31,26 +35,22 @@ public class PrincipalComBusca {
             Gson gson = new GsonBuilder()
                     .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
                     .create();
+
             TituloOmdb meuTituloOmdb = gson.fromJson(jsonBody, TituloOmdb.class);
             System.out.println(meuTituloOmdb);
-            try {
-
-                Titulo meuTitulo = new Titulo(meuTituloOmdb);
-                JOptionPane.showMessageDialog(null, meuTitulo);
-
-            } catch (NullPointerException npe) {
-
-                JOptionPane.showMessageDialog(null, "Filme não encontrado");
-                System.out.println("Erro:\n" + npe.getMessage());
-
-            } catch (NumberFormatException nfe) {
-
-                JOptionPane.showMessageDialog(null, "Erro ao converter o ano de lançamento ou a duração do filme");
-                System.out.println("Erro:\n" + nfe.getMessage());
-
-            } finally {
-                System.out.println("Fim do programa");
-            }
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Título já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException nfe) {
+            System.out.println("Erro ao buscar o filme. Verifique o endereço.");
+            System.out.println(nfe.getMessage());
+        } catch (IllegalArgumentException iae) {
+            System.out.println("Erro de argumento na busca. Verifique o endereço.");
+            System.out.println(iae.getMessage());
+        } catch (ErroDeConversaoDeAnoException e) {
+            System.out.println(e.getMessage());
         }
+
+        System.out.println("O programa finalizou corretamente!");
     }
 }
