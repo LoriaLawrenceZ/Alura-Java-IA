@@ -12,17 +12,16 @@ public class PrincipalGoogleBooks {
     public static void main(String[] args) throws IOException, InterruptedException {
         String livro = JOptionPane.showInputDialog("Qual o nome do livro?");
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        HttpClient client = HttpClient.newHttpClient();
 
-            StringBuilder endereco = new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=").append(livro)
-                    .append("&oderBy=newest&key=AIzaSyCXgXC150nuS9bUd7nBL2S4jZSe0dZ5OlM");
+        StringBuilder endereco = new StringBuilder("https://www.googleapis.com/books/v1/volumes?q=").append(livro)
+                .append("&oderBy=newest&key=AIzaSyCXgXC150nuS9bUd7nBL2S4jZSe0dZ5OlM");
 
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endereco.toString()))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(endereco.toString()))
+            .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
     }
 }
